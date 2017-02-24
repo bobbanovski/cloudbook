@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, session
+from flask import Blueprint, render_template, request, redirect, session, url_for
 import bcrypt
 from user.forms import RegisterForm, LoginForm
 
@@ -50,3 +50,20 @@ def login():
         if not user:
             error = 'username or password was incorrect'
     return render_template('user/login.html', form=form, error=error)
+    
+@user_app.route('/logout', methods=('GET','POST'))
+def logout():
+    session.pop('username')
+    return redirect(url_for('user_app.login'))
+    
+@user_app.route('/profile')
+def profile():
+    return render_template('user/profile.html')
+    
+@user_app.route('/edit')
+def edit():
+    return "User edit"
+    
+@user_app.route('/change_password')
+def change_password():
+    return "Change Password"
