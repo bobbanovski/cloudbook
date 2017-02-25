@@ -37,8 +37,20 @@ class UserTest(unittest.TestCase):
     def test_register_user(self):
         #basic registration
         rv = self.app.post('/register', data=self.user_dict(), follow_redirects = True)
-            
-        assert User.objects.filter(username="jimmy").count() == 1
+        assert User.objects.filter(username = self.user_dict()['username']).count() == 1
+        #Test for invalid username characters
+        user2 = self.user_dict()
+        user2['username'] = "James Forney"
+        user2['email'] = "muhMail@demo.demo"
+        rv = self.app.post('/register', data=user2, follow_redirects = True)
+        assert "Must be alphanumeric characters, _ or -, length of 4 to 25" in str(rv.data)
+        
+        #check if username being saved in lowercase
+        user3 = self.user_dict()
+        user3['username'] = "MuHUsEr"
+        user3['email'] = "real@demo.demo"
+        rv = self.app.post('/register', data=user3, follow_redirects = True)
+        assert User.objects.filter(username = user3['username'].lower()).count() == 1
         
     def test_login_user(self):
         #create user
@@ -53,4 +65,51 @@ class UserTest(unittest.TestCase):
             rv = c.get('/')
             assert session.get('username') == self.user_dict()['username'] # this indent is detrimental
         
+    def test_edit_profile(self):
+        #create user
+        self.app.post('/register', data=self.user_dict())
+        #login with this user
+        rv = self.app.post('/login', data=dict(
+            username = self.user_dict()['username'],
+            password = self.user_dict()['password']
+            ))
+        rv = self.app.get('/' + self.user_dict()['username']) #access profile page
+        assert "Edit Profile" in str(rv.data)
         
+        # Edit fields
+        user = self.user_dict()
+        user['first_name'] = "TestFirstName"
+        user['last_name'] = "TestLastName"
+        user['username'] = "TestUsername"
+        user['email'] = "TestEmail@demo.demo"
+        
+        # Edit the user
+        rv = self.app.post('/edit', data=user)
+        assert "Profile updated" in str(rv.data)
+        edited_user = User.objects.first()
+        assert edited_user.first_name == "TestFirstName"
+        assert edited_user.last_name == "TestLastName"
+        assert edited_user.username == "testusername"
+        assert edited_user.email == "testemail@demo.demo"
+        
+        #Create a second user
+        self.app.post('/register', data=self.user_dict())
+        #login with this user
+        rv = self.app.post('/login', data=dict(
+            username = self.user_dict()['username'],
+            password = self.user_dict()['password']
+            ))
+        rv = self.app.get('/' + self.user_dict()['username']) #access profile page
+        assert "Edit Profile" in str(rv.data)
+        #try to duplicate email
+        # Edit fields
+        user = self.user_dict()
+        user['email'] = "TestEmail@demo.demo"
+        rv = self.app.post('/edit', data=user)
+        assert "This email already exists" in str(rv.data)
+        
+        # duplicate username
+        user = self.user_dict()
+        user['username'] = "TestUsername"
+        rv = self.app.post('/edit', data=user)
+        assert "Username already taken" in str(rv.data)
