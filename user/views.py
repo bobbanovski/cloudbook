@@ -7,6 +7,9 @@ from user.models import User
 user_app = Blueprint('user_app', __name__) #name of app
 
 #use name of application for decorator
+@user_app.route('/')
+def home():
+    return render_template('/user/home.html')
 
 @user_app.route('/register', methods=('GET','POST'))
 def register():
@@ -56,9 +59,10 @@ def logout():
     session.pop('username')
     return redirect(url_for('user_app.login'))
     
-@user_app.route('/profile')
-def profile():
-    return render_template('user/profile.html')
+@user_app.route('/<username>')
+def profile(username):
+    user = User.objects.filter(username=username).first()
+    return render_template('user/profile.html', user = user)
     
 @user_app.route('/edit')
 def edit():
