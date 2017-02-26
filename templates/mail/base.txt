@@ -1,0 +1,5 @@
+{% block body %} {% endblock %}
+
+----------
+The Cloudbook Team
+http://www.cloudarchipelago.com

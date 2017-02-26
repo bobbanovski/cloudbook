@@ -10,6 +10,8 @@ class User(db.Document): #create object for Mongo
     last_name=db.StringField(db_field="ln", max_length=50)
     created=db.IntField(db_field="c", default=now())
     bio=db.StringField(db_field="b", max_length=200)
+    email_confirmed=db.BooleanField(db_field="ec", default=False)
+    change_configuration=db.DictField(db_field="cc")
     
     @classmethod  #for pre_save
     def pre_save(cls, sender, document, **kwargs): #always called before database save
