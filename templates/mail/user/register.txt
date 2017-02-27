@@ -1,6 +1,6 @@
 {% extends 'mail/base.txt' %}
 {% block body %}
-    Hi {{user.username}}, thank you for registering for Cloudbook
+    Hi {{user.first_name}}, thank you for registering for Cloudbook
     To confirm your registration, please click on the link below:
-    http://cloudarchipelago.com/confirm/user
+    {{ config.HOSTNAME }}/confirm/{{ user.username }}/{{ user.change_configuration.confirmation_code}}
 {% endblock %}

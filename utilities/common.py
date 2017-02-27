@@ -1,11 +1,15 @@
 import time
 import boto3
+from flask import current_app
 
 def utc_now_ts():
     return int(time.time())
     
 #use amazon to send emails
 def email(to_email, subject, body_html, body_text):
+    #If running a test, don't send email
+    if current_app.config.get('TESTING'):
+        return False
     client = boto3.client('ses')
     return client.send_email(
         Source = 'robert.coleman1@uqconnect.edu.au',
