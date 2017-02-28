@@ -16,11 +16,12 @@
                 {{ form.hidden_tag()}} <!--protection for form-->
                 
                 {{ render_field(form.username, class='form-control') }}
-                {{ render_field(form.password, class='form-control') }}
+                {{ render_field(form.password, **{"class": "form-control", "aria-described-by": "passwordHelpBlock"}) }} <!--** - KWARG - pass multiple instances-->
                 
                 <button type="submit" class="btn btn-default">Login</button>
             </form>
             <br />
+            <p id="passwordHelpBlock" class="help-block">Forgot password? <a href="{{ url_for('.forgotPassword') }}" >Click here to reset your password.</a></p>
         </div>
     </div>
 {% endblock %}

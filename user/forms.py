@@ -56,3 +56,14 @@ class LoginForm(Form):
     
 class EditForm(BaseUserForm):
     pass
+
+class ForgotPasswordForm(Form):
+    email = EmailField('Email Address',
+        [validators.DataRequired(), validators.Email()]
+    )
+    
+class PasswordResetForm(Form):
+    current_password = PasswordField('Current Password', [
+        validators.DataRequired(),
+        validators.length(min=4, max=80)
+        ])
