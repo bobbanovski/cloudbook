@@ -6,7 +6,7 @@ from wtforms.validators import ValidationError
 import re
 
 from user.models import User
-  
+
 class BaseUserForm(Form):
     first_name = StringField('First Name', [validators.DataRequired()])
     last_name = StringField('Last Name', [validators.DataRequired()])
@@ -23,14 +23,24 @@ class BaseUserForm(Form):
         widget=TextArea(),
         validators=[validators.Length(max=160)]
     )
-    
-class RegisterForm(BaseUserForm):
+
+class PasswordBaseForm(Form):
     password = PasswordField('New Password', [
         validators.DataRequired(),
         validators.EqualTo('confirm', message='Passwords must match'),
         validators.length(min=4, max=80)
         ])
     confirm = PasswordField('Repeat Password')
+    
+# -------------------------------------------------------------
+
+class RegisterForm(BaseUserForm, PasswordBaseForm):
+    # password = PasswordField('New Password', [
+    #     validators.DataRequired(),
+    #     validators.EqualTo('confirm', message='Passwords must match'),
+    #     validators.length(min=4, max=80)
+    #     ])
+    # confirm = PasswordField('Repeat Password')
     
     def validate_username(form, field):
         if User.objects.filter(username=field.data).first():
@@ -62,8 +72,9 @@ class ForgotPasswordForm(Form):
         [validators.DataRequired(), validators.Email()]
     )
     
-class PasswordResetForm(Form):
+class PasswordResetForm(PasswordBaseForm):
     current_password = PasswordField('Current Password', [
         validators.DataRequired(),
         validators.length(min=4, max=80)
-        ])
+    ])
+        
