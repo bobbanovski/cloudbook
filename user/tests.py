@@ -155,3 +155,43 @@ class UserTest(unittest.TestCase):
         rv = self.app.get('/' + self.user_dict()['username'])
         assert self.user_dict()['username'] in str(rv.data)
         
+    def test_forgot_password(self):
+        #create user
+        self.app.post('/register', data=self.user_dict())
+        #confirm user
+        #confirm the user
+        user = User.objects.get(username = self.user_dict()['username'])
+        code = user.change_configuration.get('confirmation_code')
+        rv = self.app.get('/confirm/' + user.username + '/' + code)
+        
+        #Enter userforgot email
+        rv = self.app.post('/forgot', data=dict(email=self.user_dict().get('email')))
+        user = User.objects.first()
+        password_reset_code = user.change_configuration.get('password_reset_code')
+        
+        assert password_reset_code is not None
+        
+        #Wrong username
+        rv = self.app.get('/password_reset/not_here' + password_reset_code)
+        assert rv.status_code == 404
+        
+        #Wrong password
+        rv = self.app.post('/password_reset/' + self.user_dict().get('username') + '/baddPassword')
+        assert rv.status_code == 404
+        
+        #Correct username and password
+        rv = self.app.post('/password_reset/' + self.user_dict().get('username') + '/' + password_reset_code,
+        data=dict(password = 'newPassword', confirm = 'newPassword'), follow_redirects = True)
+        assert "Your password has been successfully updated" in str(rv.data)
+        user = User.objects.first()
+        assert user.change_configuration == {}
+        
+        #try logging in with new password
+        rv = self.app.post('/login', data=dict(
+            username = self.user_dict()['username'],
+            password = 'newPassword'
+            ))
+        
+        with self.app as c:
+            rv = c.get('/')
+            assert session.get('username') == self.user_dict()['username']
