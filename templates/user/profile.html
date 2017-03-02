@@ -33,9 +33,28 @@
           {% endif %}
           <!--{{ rel_button(rel, user) }}-->
           {% if not edit_profile %}
-          <button type="button" class="btn btn-success">
-            <span class="glyphicon glyphicon-ok">Friended</span>
-          </button>
+            {% if rel == None %}
+              <a href="{{ url_for('.edit') }}" role="button" class="btn btn-success">
+                <span class="glyphicon glyphicon-plus"></span><span>Request to Add</span>
+              </a>
+              <a href="{{ url_for('.edit') }}" role="button" class="btn btn-success">
+                <span class="glyphicon glyphicon-remove"></span><span>Block</span>
+              </a>
+            {% endif %}
+              
+            {% if rel == BLOCKED %}
+              <a href="{{ url_for('.edit') }}" role="button" class="btn btn-success"
+                id="relationship-blocked">
+                <span class="glyphicon glyphicon-remove"></span><span>Unblock</span>
+              </a>
+            {% endif %}
+            {% if rel == FRIENDS_APPROVED %}
+              <a href="{{ url_for('.edit') }}" role="button" class="btn btn-success"
+                id="relationship-blocked">
+                <span class="glyphicon glyphicon-ok"></span>
+                <span id="relationship_label">Friends</span>
+              </a>
+            {% endif %}
           {% endif %}
         </div> <!-- btn-group -->
       </div> <!-- btn-toolbar -->
@@ -162,4 +181,24 @@
 
 {% block end_body_js %}
 {{ rel_js() }}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#relationship-friends").mouseover(function() {
+      $(this).find('#relationship-label').text('Unfriend');
+      $(this).attr("class", "btn btn-default");
+    }).mouseout(function(){
+      $(this).find('#relationship-label').text('Friends');
+      $(this).attr("class", "btn btn-primary")
+    });
+  });
+  $(document).ready(function(){
+    $("#relationship-blocked").mouseover(function() {
+      $(this).find('#relationship-label').text('Unblock');
+      $(this).attr("class", "btn btn-default");
+    }).mouseout(function(){
+      $(this).find('#relationship-label').text('Blocked');
+      $(this).attr("class", "btn btn-danger")
+    });
+  });
+</script>
 {% endblock %}
