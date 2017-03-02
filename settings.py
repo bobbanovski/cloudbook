@@ -3,5 +3,9 @@ DEBUG = True
 
 MONGODB_DB = 'cloudbook'
 HOSTNAME = 'https://advflaskproject-bobbanovski.c9users.io'
-UPLOAD_FOLDER = '/home/ubuntu/wordspace/cloudbook/static/images'
+UPLOAD_FOLDER = '/home/ubuntu/workspace/cloudbook/static/images'
 STATIC_IMAGE_URL = 'images'
+#AWS_BUCKET = 'cloudarchipelago'
+#AWS_CONTENT_URL = 'https://s3-ap-southeast-2.amazonaws.com'
+AWS_BUCKET = ''
+AWS_CONTENT_URL = ''

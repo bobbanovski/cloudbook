@@ -3,6 +3,7 @@ from wtforms import validators, StringField, PasswordField
 from wtforms.fields.html5 import EmailField
 from wtforms.widgets import TextArea
 from wtforms.validators import ValidationError
+from flask_wtf.file import FileField, FileAllowed #file uploads
 import re
 
 from user.models import User
@@ -65,7 +66,10 @@ class LoginForm(Form):
         ])
     
 class EditForm(BaseUserForm):
-    pass
+    image = FileField('Profile Image', validators=[
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif'],
+        "image must be of type jpg, png or gif")
+        ])
 
 class ForgotPasswordForm(Form):
     email = EmailField('Email Address',

@@ -1,11 +1,15 @@
 from flask import Blueprint, render_template, request, redirect, session, url_for, abort
 import bcrypt
 import uuid #unique id using time for setting
+import os
+from werkzeug import secure_filename
 
 from user.forms import RegisterForm, LoginForm, EditForm, ForgotPasswordForm, PasswordResetForm
 
 from user.models import User
 from utilities.common import email
+from settings import UPLOAD_FOLDER
+from utilities.imaging import thumbnail_process
 
 user_app = Blueprint('user_app', __name__) #name of app
 
@@ -76,7 +80,7 @@ def logout():
 def profile(username):
     edit_profile = False
     user = User.objects.filter(username=username).first()
-    if session.get('username') and user.username == session.get('username'): #if user is looking at his own profile page
+    if user and session.get('username') and user.username == session.get('username'): #if user is looking at his own profile page
         edit_profile = True
     if user:
         return render_template('user/profile.html', user = user, edit_profile=edit_profile)
@@ -91,6 +95,13 @@ def edit():
     if user:
         form = EditForm(obj=user) #pre populates form
         if form.validate_on_submit():
+            #Check if image is of correct type
+            image_ts = None
+            if request.files.get('image'):
+                filename = secure_filename(form.image.data.filename)
+                file_path = os.path.join(UPLOAD_FOLDER, 'user', filename)
+                form.image.data.save(file_path) #save form image under this path
+                image_ts = str(thumbnail_process(file_path, 'user', str(user.id)))
             if user.username != form.username.data.lower(): # check that user has changed own username
                 if User.objects.filter(username=form.username.data.lower()).first(): # check that username not already taken
                     error = "Username already taken"
@@ -116,10 +127,12 @@ def edit():
                     return "User details updated, pending email confirmation"
             if not error:
                 form.populate_obj(user) #populate form with user object
+                if image_ts: #if image was attached to form
+                    user.profile_image = image_ts
                 user.save()
                 if not message: #if user did not edit the email
                     message = "Profile updated"
-        return render_template("user/edit.html", form=form, error=error, message=message)
+        return render_template("user/edit.html", form=form, error=error, message=message, user=user)
     else:
         abort(404)
     
