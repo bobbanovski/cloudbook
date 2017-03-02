@@ -3,3 +3,5 @@ DEBUG = True
 
 MONGODB_DB = 'cloudbook'
 HOSTNAME = 'https://advflaskproject-bobbanovski.c9users.io'
+UPLOAD_FOLDER = '/home/ubuntu/wordspace/cloudbook/static/images'
+STATIC_IMAGE_URL = 'images'
