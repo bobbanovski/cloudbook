@@ -195,3 +195,4 @@ class UserTest(unittest.TestCase):
         with self.app as c:
             rv = c.get('/')
             assert session.get('username') == self.user_dict()['username']
+            
