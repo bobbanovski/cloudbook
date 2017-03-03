@@ -31,13 +31,15 @@
             <span class="glyphicon glyphicon-pencil" aria-hidden="true">Edit Profile</span>
           </a>
           {% endif %}
-          <!--{{ rel_button(rel, user) }}-->
+          
+          
+          
           {% if not edit_profile %}
             {% if rel == None %}
-              <a href="{{ url_for('.edit') }}" role="button" class="btn btn-success">
+              <a href="{{ url_for('relationship_app.add_friend', to_username=user.username) }}" role="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus"></span><span>Request to Add</span>
               </a>
-              <a href="{{ url_for('.edit') }}" role="button" class="btn btn-success">
+              <a href="{{ url_for('.edit') }}" role="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-remove"></span><span>Block</span>
               </a>
             {% endif %}
