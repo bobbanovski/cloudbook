@@ -73,25 +73,34 @@ def login():
             error = 'username or password was incorrect'
     return render_template('user/login.html', form=form, error=error)
     
-@user_app.route('/logout', methods=('GET','POST'))
+@user_app.route('/logout')
 def logout():
     session.pop('username')
     return redirect(url_for('user_app.login'))
     
 @user_app.route('/<username>')
 def profile(username):
+    logged_user = None
     edit_profile = False
     rel = None
-    
     user = User.objects.filter(username=username).first()
-    if user and session.get('username') and user.username == session.get('username'): #if user is looking at his own profile page
-        edit_profile = True
+    
     if user:
-        # compare relationship between user being looked at and user that is logged in 
-        if session.get('username'): 
+        if session.get('username'):
+            # compare relationship between user being looked at and user that is logged in 
             logged_user = User.objects.filter(username=session.get('username')).first()
             rel = Relationship.get_relationship(logged_user, user)
-        return render_template('user/profile.html', user = user, rel=rel, edit_profile=edit_profile)
+            
+        if user.username == session.get('username'): #if user is looking at his own profile page
+            edit_profile = True
+        #get friends
+        friends = Relationship.objects.filter(
+            from_user=user,
+            rel_type=Relationship.FRIENDS,
+            status=Relationship.APPROVED)
+        friends_total = friends.count()
+        
+        return render_template('user/profile.html', user = user, logged_user=logged_user, rel=rel, edit_profile=edit_profile, friends=friends, friends_total=friends_total)
     else:
         abort(404)
     

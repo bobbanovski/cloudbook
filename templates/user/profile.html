@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "user/_rel_button.html" import rel_button, rel_js %}
+{% from "_formHelpers.html" import render_field %}
 
 {% block title %}{{ user.username }} - Profile{% endblock %} 
 
@@ -92,7 +93,7 @@
           <div class="alert alert-danger" role="alert">{{ error }}</div>
           {% endif %}
           
-          {% from "_formhelpers.html" import render_field %}
+          {% from "_formHelpers.html" import render_field %}
           <!--<form method="POST" action={{ url_for('feed_app.add_message') }} role="form">-->
             {{ form.hidden_tag() }}
             
@@ -119,19 +120,19 @@
       <div class="col-md-3"> <!-- Friends side bar -->
 
         <h4><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 
-          <a href="#">Friends</a>
+          Friends
         <span class="badge">{{ friends_total }}</span></h4>
         
         {% for friend in friends %}
         <div class="media">
           <div class="media-left">
             <a class="img-thumnbnail" href="#">
-              <!--<img class="media-object" src="{{ friend.to_user.profile_imgsrc('sm') }}" width="50" height="50" alt="{{ friend.to_user.username }}">-->
+              <img class="media-object" src="{{ friend.to_user.profile_imgsrc('sm') }}" width="50" height="50" alt="{{ friend.to_user.username }}">
             </a>
           </div>
           <div class="media-body">
             <p>{{ friend.to_user.first_name }}<br />
-              <a href="#">@{{ friend.to_user.username }}</a>
+              <a href="url_for('.profile', username=friend.to_user.username)">@{{ friend.to_user.username }}</a>
             </p>
           </div>
         </div> <!-- media -->
