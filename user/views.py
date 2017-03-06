@@ -16,9 +16,9 @@ from user.decorators import login_required
 user_app = Blueprint('user_app', __name__) #name of app
 
 #use name of application for decorator
-@user_app.route('/')
-def home():
-    return render_template('/user/home.html')
+# @user_app.route('/')
+# def home():
+#     return render_template('/user/home.html')
 
 @user_app.route('/register', methods=('GET','POST'))
 def register():

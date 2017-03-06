@@ -1,0 +1,25 @@
+
+{% extends "base.html" %}
+
+{% block title %}Welcome to Cloudbook{% endblock %}
+
+{% block header %}<link href="{{ url_for('static', filename='css/base.css') }}" rel="stylesheet">{% endblock %}
+
+{% block content %}
+
+{% include "navbar.html" %}
+
+<div class="row">
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron home-jumbo">
+      <div class="container">
+        <img src="{{ url_for('static', filename='assets/cloud.png') }}" width="1020" />
+        <h1>All your friends, in the cloud</h1>
+        <p>No matter where they are in the world, they are always on the cloud</p>
+        <p><a class="btn btn-primary btn-lg" href="{{ url_for('user_app.login') }}" role="button">Login</a> or <a class="btn btn-primary btn-lg" href="{{ url_for('user_app.register') }}" role="button">Register</a></p>
+      </div>
+    </div>
+
+</div>
+{% endblock %}
