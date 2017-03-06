@@ -23,7 +23,8 @@ class Relationship(db.Document):
         )
         
     from_user = db.ReferenceField(User, db_field='fu', reverse_delete_rule=CASCADE)
-    to_user = db.ReferenceField(User, db_field='tu', reverse_delete_rule=CASCADE)
+    #to_user - user im requesting
+    to_user = db.ReferenceField(User, db_field='tu', reverse_delete_rule=CASCADE) 
     rel_type = db.IntField(db_field='rt', choices=RELATIONSHIP_TYPE)
     status = db.IntField(db_field='s', choices=STATUS_TYPE)
     req_date = db.IntField(db_field='rd', default=now())
@@ -59,7 +60,7 @@ class Relationship(db.Document):
                 if reverse_rel.status == Relationship.PENDING:
                     return "REVERSE_FRIENDS_PENDING"
             elif reverse_rel and reverse_rel.rel_type == Relationship.BLOCKED:
-                return "REVERSE_BLOCKED"
+                return "REVERSE_BLOCKED" #Check if user is reverse blocking logged in user
             return None
 
     meta = {
