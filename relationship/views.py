@@ -103,5 +103,5 @@ def Unblock(to_username):
                 to_user = to_user
                 ).delete()
         return redirect(url_for('user_app.profile', username = to_username))
-    else
+    else:
         abort(404)
