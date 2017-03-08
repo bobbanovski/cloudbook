@@ -39,20 +39,20 @@
               <a href="{{ url_for('relationship_app.add_friend', to_username=user.username) }}" role="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus"></span><span>Request to Add</span>
               </a>
-              <a href="{{ url_for('relationship_app.Block') }}" role="button" class="btn btn-default">
+              <a href="{{ url_for('relationship_app.Block', to_username=user.username) }}" role="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-remove"></span><span>Block</span>
               </a>
             {% endif %}
               
             {% if rel == BLOCKED %}
-              <a href="{{ url_for('relationship_app.Unblock') }}" role="button" class="btn btn-success"
+              <a href="{{ url_for('relationship_app.Unblock', to_username=user.username) }}" role="button" class="btn btn-success"
                 id="relationship-blocked">
                 <span class="glyphicon glyphicon-remove"></span><span>Unblock</span>
               </a>
             {% endif %}
             
             {% if rel == FRIENDS_APPROVED %}
-              <a href="{{ url_for('relationship_app.UnFriend') }}" role="button" class="btn btn-success"
+              <a href="{{ url_for('relationship_app.UnFriend', to_username=user.username) }}" role="button" class="btn btn-success"
                 id="relationship-blocked">
                 <span class="glyphicon glyphicon-ok"></span>
                 <span id="relationship_label">Friends</span>
@@ -85,36 +85,37 @@
       {% if not friends_page %}
       
       <div class="col-md-9">
+        {% if logged_user %}
         
-        {% if logged_user and (rel == "FRIENDS_APPROVED" or logged_user == user) %}
-        <!-- post text input -->
-        <div class="row feed-message">
-          {% if error %}
-          <div class="alert alert-danger" role="alert">{{ error }}</div>
-          {% endif %}
-          
-          {% from "_formHelpers.html" import render_field %}
-          <!--<form method="POST" action={{ url_for('feed_app.add_message') }} role="form">-->
-            {{ form.hidden_tag() }}
-            
-            <div class="form-group">
-              {{ form.images(class='form-control') }}
-              {{ form.post(class='form-control', rows=3) }}
-            </div>
-            
-            <input type="hidden" name="to_user" value="{{ user.username }}" />
-            <button type="submit" class="btn btn-primary pull-right">Post</button>
-          
-          </form>
-          </div> <!-- feed-message -->
+          {% if logged_user and (rel == "FRIENDS_APPROVED" or logged_user == user) %}
           <!-- post text input -->
+          <div class="row feed-message">
+            {% if error %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+            {% endif %}
+          
+            {% from "_formHelpers.html" import render_field %}
+            <form method="POST" action={{ url_for('feed_app.add_message') }} role="form">
+              {{ form.hidden_tag() }}
+              
+              <div class="form-group">
+                {{ form.images(class='form-control') }}
+                {{ form.post(class='form-control', rows=3) }}
+              </div>
+              
+              <input type="hidden" name="to_user" value="{{ user.username }}" />
+              <button type="submit" class="btn btn-primary pull-right">Post</button>
+            
+            </form>
+            </div> <!-- feed-message -->
+            <!-- post text input -->
           {% endif %}
         
           <!-- from "feed/_feed_messages.html" import render_feed_message -->
           <!--{% for message in profile_messages %}-->
           <!--  {{ render_feed_message(message) }}-->
           <!--{% endfor %}-->
-        
+        {% endif %}
       </div> <!-- col-md-9 -->
     
       <div class="col-md-3"> <!-- Friends side bar -->
@@ -156,7 +157,7 @@
               </div>
               <div class="friend-grid-user-data">
                 <!--<h4 class="profile-fullname">{{ friend.to_user.first_name }} {{ friend.to_user.last_name }} </h5>-->
-                <h5 class="profile-username"><a href="#">@{{ friend.to_user.username }}</a></h4>
+                <h5 class="profile-username"><a href="url_for('user_app.profile', username)">@{{ friend.to_user.username }}</a></h4>
               </div>
               <div class="friend-grid-user-friends-button">
                 <!--{{ rel_button(friend.is_friend(logged_user), friend.to_user) }}-->

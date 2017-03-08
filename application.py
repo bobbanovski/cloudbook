@@ -17,9 +17,11 @@ def create_app(**config_overrides): #** allows unit tester to override
     from user.views import user_app
     from relationship.views import relationship_app
     from home.views import home_app
+    from feed.views import feed_app
     
     #register blueprints
     app.register_blueprint(user_app)
     app.register_blueprint(relationship_app)
     app.register_blueprint(home_app)
+    app.register_blueprint(feed_app)
     return app

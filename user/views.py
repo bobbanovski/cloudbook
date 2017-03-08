@@ -3,6 +3,7 @@ import bcrypt
 import uuid #unique id using time for setting
 import os
 from werkzeug import secure_filename
+from feed.forms import FeedPostForm
 
 from user.forms import RegisterForm, LoginForm, EditForm, ForgotPasswordForm, PasswordResetForm
 
@@ -100,7 +101,22 @@ def profile(username):
             status=Relationship.APPROVED)
         friends_total = friends.count()
         
-        return render_template('user/profile.html', user = user, logged_user=logged_user, rel=rel, edit_profile=edit_profile, friends=friends, friends_total=friends_total)
+        if 'friends' in request.url:
+            friends_page = True
+            friends = friends.paginate(page=page, per_page=3)
+        else:
+            friends = friends[:5]
+            
+        form = FeedPostForm()
+        
+        return render_template('user/profile.html', 
+            user = user, 
+            logged_user=logged_user, 
+            rel=rel, 
+            edit_profile=edit_profile, 
+            friends=friends, 
+            friends_total=friends_total,
+            form=form)
     else:
         abort(404)
     
