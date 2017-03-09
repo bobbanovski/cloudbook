@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, session, url_for, redirect, render_template
+from flask import Blueprint, abort, session, url_for, redirect, render_template, request
 
 from user.models import User
 from user.decorators import login_required
@@ -9,6 +9,7 @@ relationship_app = Blueprint('relationship_app', __name__)
 @relationship_app.route('/add_friend/<to_username>')
 @login_required
 def add_friend(to_username):
+    ref = request.referrer
     logged_user = User.objects.filter(username = session.get('username')).first()
     to_user = User.objects.filter(username = to_username).first() 
     if to_user:
@@ -49,6 +50,7 @@ def add_friend(to_username):
 @relationship_app.route('/UnFriend/<to_username>')
 @login_required
 def UnFriend(to_username):
+    ref = request.referrer
     logged_user = User.objects.filter(username = session.get('username')).first()
     to_user = User.objects.filter(username = to_username).first() 
     if to_user:
@@ -61,6 +63,10 @@ def UnFriend(to_username):
                 from_user = to_user,
                 to_user = logged_user).delete()
             return redirect(url_for('user_app.profile', username = to_username))
+        if ref:
+            return redirect(ref)
+        else:
+            return redirect(url_for('user_app.profile', username=to_user.username))
     else:
         abort(404)
         

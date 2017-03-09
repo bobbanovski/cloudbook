@@ -11,25 +11,25 @@
 <a href="{{ url_for('relationship_app.add_friend', to_username=user.username) }}" role="button" class="relationship-add-friend btn btn-default">
   <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Friend
 </a>  
-<a href="{{ url_for('relationship_app.block', to_username=user.username) }}" role="button" class="btn btn-default">
+<a href="{{ url_for('relationship_app.Block', to_username=user.username) }}" role="button" class="btn btn-default">
   <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Block
 </a>  
 {% endif %}
 
 {% if rel == "BLOCKED" %}
-<a href="{{ url_for('relationship_app.unblock', to_username=user.username) }}" role="button" class="relationship-blocked btn btn-danger">
+<a href="{{ url_for('relationship_app.Unblock', to_username=user.username) }}" role="button" class="relationship-blocked btn btn-danger">
   <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <span id="relationship-label">Blocked</span>
 </a>
 {% endif %}
 
 {% if rel == "FRIENDS_APPROVED" %}
-<a href="{{ url_for('relationship_app.remove_friend', to_username=user.username) }}" role="button" class="relationship-friends btn btn-primary">
+<a href="{{ url_for('relationship_app.UnFriend', to_username=user.username) }}" role="button" class="relationship-friends btn btn-primary">
   <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> <span id="relationship-label">Friends</span>
 </a>
 {% endif %}
 
 {% if rel == "FRIENDS_PENDING" %}
-<a href="{{ url_for('relationship_app.remove_friend', to_username=user.username) }}" role="button" class="relationship-friends-requested btn btn-primary">
+<a href="{{ url_for('relationship_app.UnFriend', to_username=user.username) }}" role="button" class="relationship-friends-requested btn btn-primary">
   <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span id="relationship-label">Friendship Requested</span>
 </a>
 {% endif %}
@@ -38,7 +38,7 @@
 <a href="{{ url_for('relationship_app.add_friend', to_username=user.username) }}" role="button" class="relationship-reverse-friends-requested btn btn-primary">
   <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span id="relationship-label">Accept Friendship</span>
 </a>
-<a href="{{ url_for('relationship_app.remove_friend', to_username=user.username) }}" role="button" class="relationship-reverse-friends-cancel btn btn-default">
+<a href="{{ url_for('relationship_app.UnFriend', to_username=user.username) }}" role="button" class="relationship-reverse-friends-cancel btn btn-default">
   <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <span id="relationship-label">Deny Friendship</span>
 </a>            
 {% endif %}

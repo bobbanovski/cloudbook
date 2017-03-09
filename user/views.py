@@ -78,13 +78,15 @@ def login():
 def logout():
     session.pop('username')
     return redirect(url_for('user_app.login'))
-    
+
+@user_app.route('/<username>/friends', endpoint='profile-friends') 
 @user_app.route('/<username>')
 def profile(username):
     logged_user = None
     edit_profile = False
     rel = None
     user = User.objects.filter(username=username).first()
+    profile_messages = []
     
     if user:
         if session.get('username'):
@@ -94,6 +96,7 @@ def profile(username):
             
         if user.username == session.get('username'): #if user is looking at his own profile page
             edit_profile = True
+            
         #get friends
         friends = Relationship.objects.filter(
             from_user=user,
