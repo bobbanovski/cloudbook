@@ -9,3 +9,4 @@ AWS_BUCKET = 'cloudarchipelago'
 AWS_CONTENT_URL = 'https://s3-ap-southeast-2.amazonaws.com'
 #AWS_BUCKET = ''
 #AWS_CONTENT_URL = ''
+#AWS_SEND_MAIL = False

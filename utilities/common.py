@@ -7,8 +7,8 @@ def utc_now_ts():
     
 #use amazon to send emails
 def email(to_email, subject, body_html, body_text):
-    #If running a test, don't send email
-    if current_app.config.get('TESTING'):
+    #If running a test or manually disabled, don't send email
+    if current_app.config.get('TESTING') or not current_app.config.get('AWS_SEND_MAIL'):
         return False
     client = boto3.client('ses')
     return client.send_email(
